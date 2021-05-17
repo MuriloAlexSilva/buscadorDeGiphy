@@ -1,6 +1,7 @@
-import 'package:buscador_de_giphy/app/views/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
-main(List<String> args) {
-  runApp(HomePage());
-}
+import 'app/app_module.dart';
+import 'app/app_widget.dart';
+
+void main() => runApp(ModularApp(module: AppModule(), child: AppWidget()));
