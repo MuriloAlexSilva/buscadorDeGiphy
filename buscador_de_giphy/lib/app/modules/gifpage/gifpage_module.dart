@@ -1,6 +1,5 @@
+import 'package:buscador_de_giphy/app/modules/gifpage/gifPage_widget.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
-import 'gif_page.dart';
 
 class GifPageModule extends Module {
   @override
@@ -9,7 +8,7 @@ class GifPageModule extends Module {
   @override
   final List<ModularRoute> routes = [
     ChildRoute('/gifPage',
-        child: (context, args) => GifPage(
+        child: (context, args) => GifPageWidget(
               gifModel: args.data,
             )),
   ];

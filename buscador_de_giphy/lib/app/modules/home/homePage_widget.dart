@@ -3,10 +3,12 @@ import 'package:buscador_de_giphy/app/modules/gifpage/gif_model.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
-class HomePage extends StatefulWidget {
+class HomePageWidget extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageWidgetState createState() => _HomePageWidgetState();
 }
 
 String search;
@@ -14,7 +16,7 @@ int offset = 0;
 
 Future<Map> getGifs() async {
   http.Response response;
-  if (search == null) {
+  if (search == null || search.isEmpty) {
     response = await http.get(
         'https://api.giphy.com/v1/gifs/trending?api_key=Tx5sEypFAlF6XC8jBT8TNtNQy04EfTQz&limit=25&rating=g');
   } else {
@@ -24,7 +26,7 @@ Future<Map> getGifs() async {
   return jsonDecode(response.body);
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageWidgetState extends State<HomePageWidget> {
   @override
   void initState() {
     super.initState();
@@ -116,8 +118,12 @@ class _HomePageState extends State<HomePage> {
       itemBuilder: (context, index) {
         if (search == null || index < snapshot.data['data'].length) {
           return GestureDetector(
-            child: Image.network(
-              snapshot.data['data'][index]['images']['fixed_height']['url'],
+            child: FadeInImage.memoryNetwork(
+              placeholder:
+                  kTransparentImage, //O 'kTransparentImage' suaviza o aparecimento das imagens, devido a imagem estar vindo da internet, temos que adicionar
+              //no pubspec e utilizar o 'FadeInImage.memoryNetwork'
+              image: snapshot.data['data'][index]['images']['fixed_height']
+                  ['url'],
               height: 300,
               fit: BoxFit.cover,
             ),
@@ -127,6 +133,11 @@ class _HomePageState extends State<HomePage> {
                       title: snapshot.data['data'][index]['title'],
                       url: snapshot.data['data'][index]['images']
                           ['fixed_height']['url']));
+            },
+            onLongPress: () {
+              Share.share(snapshot.data['data'][index]['images']['fixed_height']
+                  ['url']);
+              //Para compartilhar o gif via dependencia share
             },
           );
         } else {
